@@ -1,0 +1,913 @@
+/* ═══════════════════════════════════════════════
+   Weekly To-Do — style.css
+   ─────────────────────────────────────────────
+   1.  Variables
+   2.  Reset & Base
+   3.  Language Switcher
+   4.  Auth Pages  (index.html / register.html)
+   5.  App Header  (app.html)
+   6.  User Chip
+   7.  App Body layout
+   8.  Calendar Grid
+   9.  Day Panel
+   10. Task Items
+   11. Task Modal (notification bottom-sheet)
+   12. Animations
+   13. Mobile responsive
+═══════════════════════════════════════════════ */
+
+/* ── 1. VARIABLES ── */
+
+:root {
+  --accent:      #4a7c8e;
+  --accent-lt:   #6a9daf;
+  --accent-bg:   #eef4f6;
+  --bg:          #f2f5f8;
+  --white:       #ffffff;
+  --text:        #1c2b33;
+  --muted:       #7a9199;
+  --border:      #dde4e8;
+  --danger:      #c0392b;
+  --done-color:  #a0b8c0;
+  --radius:      12px;
+  --shadow-sm:   0 1px 4px rgba(0,0,0,0.06);
+  --shadow:      0 3px 14px rgba(0,0,0,0.08);
+  --shadow-lg:   0 8px 32px rgba(0,0,0,0.12);
+  --header-h:    60px;
+}
+
+/* ── 2. RESET & BASE ── */
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── 3. LANGUAGE SWITCHER ── */
+
+.lang-switcher {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 9px;
+}
+
+.auth-page .lang-switcher {
+  background: rgba(255,255,255,0.13);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.app-page .lang-switcher {
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.lang-btn {
+  padding: 4px 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.auth-page .lang-btn        { background: transparent;            color: rgba(255,255,255,0.6); }
+.auth-page .lang-btn.active { background: rgba(255,255,255,0.28); color: #fff; }
+.auth-page .lang-btn:hover:not(.active) { color: rgba(255,255,255,0.9); }
+
+.app-page .lang-btn        { background: transparent;  color: var(--muted); }
+.app-page .lang-btn.active { background: var(--accent); color: #fff; }
+.app-page .lang-btn:hover:not(.active) { background: var(--accent-bg); color: var(--accent); }
+
+/* ── 4. AUTH PAGES ── */
+
+.auth-page {
+  background: linear-gradient(140deg, #3d6a7a 0%, #2d5060 55%, #1e3d4a 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px 16px;
+}
+
+.auth-topbar {
+  position: fixed;
+  top: 0; right: 0;
+  padding: 12px 18px;
+  z-index: 10;
+}
+
+.auth-wrap {
+  width: 100%;
+  max-width: 390px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-brand { text-align: center; color: #fff; margin-bottom: 4px; }
+.auth-brand-icon { font-size: 38px; display: block; margin-bottom: 8px; }
+.auth-brand-name { font-size: 22px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 4px; }
+.auth-brand-sub  { font-size: 13px; color: rgba(255,255,255,0.58); }
+
+.auth-card {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 28px 24px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+}
+
+.auth-heading { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+
+.auth-error {
+  font-size: 12px;
+  color: var(--danger);
+  min-height: 16px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.auth-input {
+  display: block;
+  width: 100%;
+  padding: 11px 13px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--white);
+  outline: none;
+  margin-bottom: 9px;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+.auth-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(74,124,142,0.13);
+}
+
+.auth-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+  margin-bottom: 8px;
+}
+.auth-btn:hover  { opacity: 0.88; transform: translateY(-1px); }
+.auth-btn:active { transform: scale(0.98); }
+
+.auth-btn-primary { background: var(--accent); color: #fff; box-shadow: 0 4px 14px rgba(74,124,142,0.3); }
+.auth-btn-guest   { background: var(--accent-bg); color: var(--accent); border: 1.5px solid var(--accent-lt); }
+
+.auth-divider {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; color: var(--muted);
+  margin: 2px 0 8px;
+}
+.auth-divider::before, .auth-divider::after {
+  content: ""; flex: 1; height: 1px; background: var(--border);
+}
+
+.auth-switch {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  font-size: 13px; color: var(--muted); margin-top: 10px;
+}
+.auth-switch a, .auth-switch button {
+  background: none; border: none; padding: 0; margin: 0;
+  color: var(--accent); font-weight: 700; font-size: 13px;
+  font-family: inherit; cursor: pointer; text-decoration: none;
+}
+.auth-switch a:hover, .auth-switch button:hover { text-decoration: underline; }
+
+.tier-compare { display: flex; gap: 8px; }
+.tier-item {
+  flex: 1;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 12px;
+  padding: 12px 8px;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 5px; text-align: center;
+}
+.tier-ci {
+  width: 28px; height: 28px; border-radius: 50%;
+  font-size: 12px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+}
+.tier-ci.guest { background: rgba(255,255,255,0.2);  color: rgba(255,255,255,0.9); }
+.tier-ci.free  { background: rgba(74,124,142,0.65);  color: #fff; }
+.tier-ci.pro   { background: rgba(185,135,40,0.85);  color: #fff; }
+.tier-name { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.9); }
+.tier-days { font-size: 10px; color: rgba(255,255,255,0.55); }
+
+.auth-copy {
+  font-size: 11px; color: rgba(255,255,255,0.3);
+  text-align: center; letter-spacing: 1px; margin-top: 4px;
+}
+
+/* Guest hint card */
+.guest-hint-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--accent-bg);
+  border: 1.5px dashed var(--accent-lt);
+  border-radius: 12px;
+  cursor: pointer;
+  margin-bottom: 4px;
+  transition: background 0.15s, border-color 0.15s;
+}
+.guest-hint-card:hover { background: rgba(74,124,142,0.15); border-color: var(--accent); }
+.guest-hint-icon { font-size: 18px; flex-shrink: 0; }
+.guest-hint-text { flex: 1; font-size: 12px; font-weight: 600; color: var(--accent); line-height: 1.4; }
+.guest-hint-arrow { font-size: 14px; color: var(--accent); flex-shrink: 0; opacity: 0.7; }
+
+/* ── 5. APP HEADER ── */
+
+.app-page {
+  background:
+    radial-gradient(ellipse at top left, rgba(74,124,142,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(106,157,175,0.06) 0%, transparent 50%),
+    #f2f5f8;
+}
+
+.app-header {
+  height: var(--header-h);
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 0 var(--border), 0 4px 20px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.header-inner {
+  height: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.brand-icon { font-size: 20px; }
+.brand-title { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; white-space: nowrap; }
+
+.progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+.progress-label { font-size: 11px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+.progress-track {
+  flex: 1;
+  height: 6px;
+  background: #e0e7ea;
+  border-radius: 99px;
+  overflow: hidden;
+  min-width: 60px;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--accent), var(--accent-lt));
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── 6. USER CHIP ── */
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px 4px 4px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+}
+
+.user-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-lt));
+  color: #fff;
+  font-size: 12px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.user-name { font-size: 12px; font-weight: 600; color: var(--text); }
+
+.tier-badge {
+  font-size: 9px; font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 999px;
+  letter-spacing: 0.3px;
+}
+.tier-badge.guest   { background: var(--border);              color: var(--muted); }
+.tier-badge.user    { background: rgba(74,124,142,0.18);      color: var(--accent); }
+.tier-badge.premium { background: rgba(185,135,40,0.18);      color: #a07020; }
+.tier-badge.admin   { background: rgba(100,40,200,0.12);      color: #6a28c8; }
+
+.logout-btn {
+  background: none; border: none;
+  cursor: pointer; color: var(--muted);
+  font-size: 14px; padding: 3px 5px;
+  border-radius: 6px;
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+.logout-btn:hover { color: var(--danger); background: rgba(192,57,43,0.08); }
+
+/* ── 7. APP BODY LAYOUT ── */
+
+.app-body {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  height: calc(100vh - var(--header-h));
+  overflow: hidden;
+}
+
+/* ── 8. CALENDAR ── */
+
+.calendar-col {
+  overflow-y: auto;
+  padding: 20px 20px 40px;
+  border-right: 1px solid var(--border);
+}
+
+/* Month navigation */
+.cal-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  gap: 8px;
+}
+
+.cal-month-label {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--text);
+  flex: 1;
+  text-align: center;
+  letter-spacing: -0.3px;
+}
+
+.cal-nav-btn {
+  width: 36px; height: 36px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  border-radius: 10px;
+  font-size: 16px; font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: background 0.15s, color 0.15s, transform 0.12s;
+  flex-shrink: 0;
+}
+.cal-nav-btn:hover:not(:disabled) {
+  background: var(--accent-bg);
+  color: var(--accent);
+  transform: scale(1.05);
+}
+.cal-nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+/* Calendar grid */
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+/* Day-of-week headers */
+.cal-dow {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  padding: 4px 0 10px;
+  letter-spacing: 0.5px;
+}
+
+/* Day cells */
+.cal-day {
+  aspect-ratio: 1;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 7px 7px 5px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s, transform 0.12s;
+  user-select: none;
+}
+
+.cal-day:hover:not(.is-locked):not(.is-selected) {
+  border-color: var(--accent-lt);
+  background: var(--accent-bg);
+  box-shadow: 0 4px 12px rgba(74,124,142,0.15);
+  transform: scale(1.04);
+}
+
+.cal-day.other-month {
+  opacity: 0.32;
+  box-shadow: none;
+}
+
+.cal-day.is-today {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, var(--accent-bg) 0%, #fff 100%);
+  box-shadow: 0 0 0 2px rgba(74,124,142,0.2), var(--shadow-sm);
+}
+
+.cal-day.is-today .cal-num {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.cal-day.is-selected {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-lt) 100%);
+  border-color: transparent;
+  box-shadow: 0 6px 20px rgba(74,124,142,0.4);
+  transform: scale(1.04);
+}
+
+.cal-day.is-selected .cal-num   { color: #fff; font-weight: 800; }
+.cal-day.is-selected .cal-count { background: rgba(255,255,255,0.3); color: #fff; }
+
+.cal-day.is-locked {
+  background: var(--bg);
+  cursor: not-allowed;
+  opacity: 0.45;
+  box-shadow: none;
+}
+
+.cal-num {
+  font-size: clamp(11px, 2.5vw, 14px);
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+}
+
+/* Task count badge */
+.cal-count {
+  position: absolute;
+  top: 5px; right: 5px;
+  font-size: 9px; font-weight: 800;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 1px 5px;
+  line-height: 1.5;
+}
+
+/* Progress bar inside cell (bottom) */
+.cal-bar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: rgba(0,0,0,0.06);
+  border-radius: 0 0 10px 10px;
+}
+.cal-bar::after {
+  content: "";
+  display: block;
+  height: 100%;
+  width: var(--pct, 0%);
+  background: linear-gradient(to right, var(--accent), var(--accent-lt));
+  border-radius: inherit;
+  transition: width 0.3s ease;
+}
+.cal-day.is-selected .cal-bar { background: rgba(255,255,255,0.25); }
+.cal-day.is-selected .cal-bar::after { background: rgba(255,255,255,0.7); }
+
+/* Lock icon inside locked cell */
+.cal-lock {
+  font-size: 10px;
+  position: absolute;
+  bottom: 4px; right: 4px;
+  opacity: 0.45;
+}
+
+/* ── 9. DAY PANEL ── */
+
+.day-panel {
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--white);
+  box-shadow: -4px 0 24px rgba(0,0,0,0.04);
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid var(--accent-bg);
+  flex-shrink: 0;
+}
+
+.panel-datestr {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text);
+  flex: 1;
+  letter-spacing: -0.2px;
+}
+
+.panel-today-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: linear-gradient(120deg, var(--accent), var(--accent-lt));
+  color: #fff;
+  padding: 4px 11px;
+  border-radius: 999px;
+  letter-spacing: 0.3px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(74,124,142,0.3);
+}
+
+.panel-locked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 36px 16px;
+  text-align: center;
+  color: var(--muted);
+  flex: 1;
+}
+.panel-lock-icon { font-size: 28px; opacity: 0.5; }
+.panel-locked p  { font-size: 13px; line-height: 1.6; }
+
+.panel-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: 1;
+}
+
+.panel-empty {
+  font-size: 13px;
+  color: var(--muted);
+  padding: 32px 0;
+  text-align: center;
+}
+
+/* ── 10. TASK ITEMS ── */
+
+.panel-task {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 12px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.15s, opacity 0.15s, transform 0.12s;
+  animation: slideIn 0.18s ease;
+}
+.panel-task:hover     { box-shadow: var(--shadow); transform: translateX(2px); }
+.panel-task.done      { opacity: 0.52; }
+.panel-task.removing  { opacity: 0; transform: translateX(12px); transition: 0.18s ease; }
+
+.task-check {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--white);
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 900;
+  color: transparent;
+  transition: border-color 0.15s, background 0.15s, transform 0.12s;
+}
+.task-check:hover    { border-color: var(--accent); transform: scale(1.1); }
+.task-check.checked  {
+  background: linear-gradient(135deg, var(--accent), var(--accent-lt));
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(74,124,142,0.35);
+}
+
+.task-text {
+  flex: 1;
+  font-size: 13px; font-weight: 500;
+  color: var(--text); line-height: 1.4;
+  word-break: break-word;
+}
+.panel-task.done .task-text { text-decoration: line-through; color: var(--done-color); }
+
+.task-del {
+  border: none; background: none;
+  color: #c0cdd3; font-size: 18px;
+  cursor: pointer; padding: 0 2px;
+  flex-shrink: 0; opacity: 0;
+  transition: color 0.15s, opacity 0.15s;
+}
+.panel-task:hover .task-del { opacity: 1; }
+.task-del:hover { color: var(--danger); }
+
+/* Add task trigger button (replaces inline input) */
+.panel-add-trigger { padding-top: 8px; border-top: 1px solid var(--border); flex-shrink: 0; }
+
+.panel-add-trigger-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px;
+  border: 1.5px dashed var(--border);
+  border-radius: 11px;
+  background: transparent;
+  font-size: 13px; font-weight: 600;
+  font-family: inherit;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s, transform 0.12s;
+}
+.panel-add-trigger-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-bg);
+  transform: translateY(-1px);
+}
+.panel-add-trigger-btn:active { transform: scale(0.98); }
+
+/* ── 11. TASK MODAL (notification bottom-sheet) ── */
+
+.task-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.task-modal.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.task-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15,30,45,0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.task-modal-sheet {
+  position: relative;
+  z-index: 1;
+  background: var(--white);
+  border-radius: 24px 24px 0 0;
+  padding: 12px 20px 32px;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.15);
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.task-modal.open .task-modal-sheet {
+  transform: translateY(0);
+}
+
+/* Drag handle */
+.sheet-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  margin: 0 auto 16px;
+}
+
+/* Date label inside modal */
+.sheet-date {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 16px;
+  letter-spacing: 0.2px;
+}
+
+/* Input area */
+.sheet-input-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.sheet-input-row:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(74,124,142,0.14);
+  background: var(--white);
+}
+
+.sheet-emoji {
+  font-size: 20px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.sheet-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  font-family: inherit;
+  color: var(--text);
+  background: transparent;
+  min-width: 0;
+}
+
+.sheet-input::placeholder { color: var(--muted); }
+
+/* Action buttons */
+.sheet-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.sheet-cancel-btn {
+  flex: 1;
+  padding: 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  background: transparent;
+  font-size: 14px; font-weight: 700;
+  font-family: inherit;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.sheet-cancel-btn:hover { background: var(--bg); color: var(--text); }
+
+.sheet-add-btn {
+  flex: 2;
+  padding: 14px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(120deg, var(--accent), var(--accent-lt));
+  color: #fff;
+  font-size: 14px; font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(74,124,142,0.35);
+  transition: opacity 0.15s, transform 0.1s, box-shadow 0.15s;
+}
+.sheet-add-btn:hover  { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 8px 22px rgba(74,124,142,0.45); }
+.sheet-add-btn:active { transform: scale(0.97); }
+
+/* Desktop: center the modal sheet instead of full-width bottom */
+@media (min-width: 600px) {
+  .task-modal { justify-content: center; align-items: center; }
+  .task-modal-sheet {
+    border-radius: 24px;
+    max-width: 460px;
+    width: 90%;
+    padding: 16px 24px 28px;
+    transform: scale(0.92) translateY(16px);
+    transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .task-modal.open .task-modal-sheet {
+    transform: scale(1) translateY(0);
+  }
+  .sheet-handle { display: none; }
+}
+
+/* ── 12. ANIMATIONS ── */
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pop {
+  0%  { transform: scale(1); }
+  45% { transform: scale(1.35); }
+  100%{ transform: scale(1); }
+}
+.task-check.pop { animation: pop 0.22s ease; }
+
+/* ── 13. MOBILE RESPONSIVE ── */
+
+/* ≤ 840px: stack calendar above day panel */
+@media (max-width: 840px) {
+  .app-body {
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
+  }
+
+  .calendar-col {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 14px 14px 16px;
+    overflow: visible;
+  }
+
+  .day-panel {
+    padding: 14px;
+    min-height: 280px;
+    box-shadow: none;
+    border-top: 3px solid var(--accent-bg);
+  }
+}
+
+/* ≤ 600px: compact header */
+@media (max-width: 600px) {
+  :root { --header-h: 54px; }
+
+  .progress-wrap { display: none; }
+  .user-name     { display: none; }
+  .brand-title   { font-size: 15px; }
+  .header-inner  { gap: 8px; padding: 0 12px; }
+  .header-right  { gap: 6px; }
+
+  .cal-nav { margin-bottom: 10px; }
+  .cal-month-label { font-size: 16px; }
+  .cal-nav-btn { width: 32px; height: 32px; font-size: 14px; }
+  .cal-grid { gap: 3px; }
+  .cal-day  { border-radius: 8px; padding: 5px 5px 3px; }
+  .cal-count { font-size: 8px; top: 3px; right: 3px; padding: 1px 4px; }
+
+  .auth-topbar { padding: 8px 12px; }
+  .auth-card   { padding: 22px 18px; }
+
+  /* Day panel bottom sheet feel on mobile */
+  .day-panel { border-radius: 20px 20px 0 0; }
+}
+
+/* ≤ 480px: prevent header overflow — hide non-essential items */
+@media (max-width: 480px) {
+  .brand-title { display: none; }
+  .tier-badge  { display: none; }
+
+  .lang-btn { padding: 4px 7px; font-size: 10px; }
+
+  .user-chip { padding: 3px 6px 3px 3px; gap: 5px; }
+  .user-avatar { width: 24px; height: 24px; font-size: 11px; }
+  .logout-btn  { font-size: 13px; padding: 2px 4px; }
+}
+
+/* ≤ 380px: very small phones */
+@media (max-width: 380px) {
+  .cal-dow  { font-size: 9px; padding-bottom: 5px; }
+  .cal-num  { font-size: 10px; }
+  .cal-day  { padding: 4px 3px 3px; }
+  .lang-btn { padding: 3px 5px; font-size: 9px; }
+}

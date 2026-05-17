@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weekly To-Do</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="header-top">
+        <div class="brand">
+          <span class="brand-icon">✅</span>
+          <h1>Weekly To-Do</h1>
+        </div>
+        <div class="progress-wrap">
+          <span class="progress-label" id="progressLabel">0 / 0 done</span>
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill" style="width:0%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="week-nav">
+        <button class="nav-btn" onclick="changeWeek(-1)">‹ Prev</button>
+        <span class="week-label" id="weekLabel"></span>
+        <button class="nav-btn" onclick="changeWeek(1)">Next ›</button>
+        <button class="today-btn" id="todayBtn" onclick="goToday()">Today</button>
+      </div>
+    </header>
+
+    <main class="board" id="board"></main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
