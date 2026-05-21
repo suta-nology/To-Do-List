@@ -10,8 +10,8 @@ const LANG = {
   /* ── JAPANESE ── */
   ja: {
     /* Auth pages */
-    appTitle:       "Weekly To-Do",
-    appSub:         "タスクを整理して、毎日をスムーズに",
+    appTitle:       "Mirailist",
+    appSub:         "未来を、一歩ずつ。",
     loginHeading:   "ログイン",
     loginBtn:       "ログイン",
     guestBtn:       "👤 ゲストとして入る",
@@ -63,8 +63,8 @@ const LANG = {
 
   /* ── INDONESIAN ── */
   id: {
-    appTitle:       "Weekly To-Do",
-    appSub:         "Atur tugas harian dengan mudah",
+    appTitle:       "Mirailist",
+    appSub:         "Rencanakan masa depanmu, satu tugas dalam satu waktu.",
     loginHeading:   "Masuk",
     loginBtn:       "Masuk",
     guestBtn:       "👤 Masuk sebagai Tamu",
@@ -109,8 +109,8 @@ const LANG = {
 
   /* ── ENGLISH ── */
   en: {
-    appTitle:       "Weekly To-Do",
-    appSub:         "Organize your tasks, every day",
+    appTitle:       "Mirailist",
+    appSub:         "Your future, one task at a time.",
     loginHeading:   "Sign In",
     loginBtn:       "Sign In",
     guestBtn:       "👤 Continue as Guest",
