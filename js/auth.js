@@ -71,6 +71,8 @@ async function login() {
   }
 }
 
+function handleLoginKey(e) { if (e.key === "Enter") login(); }
+
 /* ── Guest login ── */
 
 async function loginAsGuest() {
@@ -79,8 +81,6 @@ async function loginAsGuest() {
   localStorage.setItem("ml_loginDate", new Date().toISOString().slice(0, 10));
   window.location.href = "app.html";
 }
-
-function handleLoginKey(e) { if (e.key === "Enter") login(); }
 
 /* ── Register (register.html) ── */
 
@@ -98,22 +98,21 @@ async function register() {
   if (btn) btn.disabled = true;
 
   try {
-    // Check username uniqueness in Firestore
     const taken = await _db.collection("usernames").doc(username.toLowerCase()).get();
-    if (taken.exists) { errEl.textContent = t("errTaken"); if (btn) btn.disabled = false; return; }
+    if (taken.exists) {
+      errEl.textContent = t("errTaken");
+      if (btn) btn.disabled = false;
+      return;
+    }
 
     const email = _emailFromUsername(username);
     const cred  = await _auth.createUserWithEmailAndPassword(email, password);
     const uid   = cred.user.uid;
 
-    // Save user profile
     await _db.collection("users").doc(uid).set({
-      username,
-      email,
-      role:      "user",
+      username, email, role: "user",
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
-    // Username lookup index
     await _db.collection("usernames").doc(username.toLowerCase()).set({ uid, email });
 
     setSession("user", username, uid);
@@ -127,7 +126,7 @@ async function register() {
 
 function handleRegisterKey(e) { if (e.key === "Enter") register(); }
 
-/* ── Logout (app.html) ── */
+/* ── Logout ── */
 
 async function logout() {
   try { await _auth.signOut(); } catch (_) {}
@@ -135,7 +134,7 @@ async function logout() {
   window.location.href = "index.html";
 }
 
-/* ── Guest expiry check ── */
+/* ── Guest expiry ── */
 
 function checkGuestExpiry() {
   if (getRole() !== "guest") return;
@@ -147,33 +146,39 @@ function checkGuestExpiry() {
   }
 }
 
-/* ── Page guards ── */
+/* ── Page guards ──
+   KEY PRINCIPLE: localStorage is the session source of truth.
+   onAuthStateChanged is used ONLY for background data sync,
+   never for redirects — avoids the initial-null redirect loop.
+── */
 
 function guardApp() {
-  if (!getRole()) { window.location.href = "index.html"; return false; }
+  // Fast check: no session → redirect immediately
+  if (!getRole()) {
+    window.location.href = "index.html";
+    return false;
+  }
 
-  // Firebase Auth state listener — re-sync from Firestore (prevents tampering)
+  // Background sync from Firestore (never redirects)
   if (typeof _auth !== "undefined") {
     _auth.onAuthStateChanged(async (user) => {
       if (user && !user.isAnonymous) {
         await _syncUserFromFirestore(user.uid);
-      } else if (!user && getRole() !== "guest") {
-        clearSession();
-        window.location.href = "index.html";
       }
+      // Do NOT redirect when user is null here —
+      // Firebase fires null first on every page load before resolving
+      // the real session. Trusting localStorage prevents the loop.
     });
   }
   return true;
 }
 
 function redirectIfLoggedIn() {
-  if (getRole()) { window.location.href = "app.html"; return true; }
-
-  // Also listen to Firebase session
-  if (typeof _auth !== "undefined") {
-    _auth.onAuthStateChanged((user) => {
-      if (user) { window.location.href = "app.html"; }
-    });
+  // Fast check: session exists → redirect to app
+  if (getRole()) {
+    window.location.href = "app.html";
+    return true;
   }
+  // No Firebase listener here — avoids double-redirect after login/register
   return false;
 }
